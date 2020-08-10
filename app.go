@@ -9,7 +9,7 @@ import (
 
 func main() {
 	listen := getListen()
-	logrus.Println("Starting... listening on", listen)
+	logrus.Println("listening on", listen)
 	web.Setup(listen)
 }
 
