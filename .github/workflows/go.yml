@@ -6,13 +6,14 @@ on:
     branches: [ master ]
 jobs:
   build:
-    - steps:
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
-      - name: Build and push Docker images
-          uses: docker/build-push-action@v1
-          with:
-            username: just1689
-            password: ${{ secrets.DOCKER_PASSWORD }}
-            repository: just1689/sttt
-            tag_with_ref: true
+    name:
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+    - name: Build and push Docker images
+        uses: docker/build-push-action@v1
+        with:
+          username: just1689
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: just1689/sttt
+          tag_with_ref: true
