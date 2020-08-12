@@ -3,6 +3,7 @@ package domain
 import (
 	"errors"
 	"fmt"
+	"github.com/just1689/sttt/metrics"
 	"sync"
 )
 
@@ -45,6 +46,8 @@ func (b *Board) Play(x, y, turnID int) error {
 	if b.Tiles[x][y] == 0 {
 		b.Tiles[x][y] = turnID
 		b.NextTurnID = b.NextTurnID * -1
+		metrics.Plays.Inc()
+		return nil
 	}
 	return errors.New(fmt.Sprintf("tile %v,%v is not 0", x, y))
 }
@@ -52,16 +55,23 @@ func (b *Board) Play(x, y, turnID int) error {
 func (b *Board) CheckForWinner() {
 	b.Lock()
 	defer b.Unlock()
-	for row := range b.getRows() {
+	if b.HasWinner {
+		return
+	}
+	defer func() {
 		if b.HasWinner {
-			continue
+			metrics.Wins.Inc()
 		}
+	}()
+	for row := range b.getRows() {
 		if row == Player1Win {
 			b.HasWinner = true
 			b.WinnerTurnID = Player1
+			break
 		} else if row == Player2Win {
 			b.HasWinner = true
 			b.WinnerTurnID = Player2
+			break
 		}
 	}
 	return

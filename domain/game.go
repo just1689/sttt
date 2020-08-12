@@ -2,9 +2,12 @@ package domain
 
 import (
 	"github.com/google/uuid"
+	"github.com/just1689/sttt/metrics"
 )
 
 func NewGame(p *Player) *Game {
+	metrics.GamesCreated.Inc()
+	metrics.PlayersJoined.Inc()
 	return &Game{
 		ID:            uuid.New().String(),
 		Board:         NewBoard(),
@@ -25,6 +28,7 @@ func (g *Game) NewPlayer(p *Player) (err error) {
 	if g.PlayersInGame.IsGameFull() {
 		g.Board.Started = true
 	}
+	metrics.PlayersJoined.Inc()
 	return
 }
 
