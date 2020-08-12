@@ -1,0 +1,45 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: sttt
+  namespace: sttt
+  labels:
+    app: sttt
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: sttt
+  type: ClusterIP
+  sessionAffinity: None
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: sttt
+  namespace: sttt
+  labels:
+    app: sttt
+spec:
+  selector:
+    matchLabels:
+      name: sttt
+  template:
+    metadata:
+      labels:
+        name: sttt
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+    spec:
+      containers:
+        - name: sttt
+          image: reg.captainjustin.space/just1689/sttt:dev
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+---
