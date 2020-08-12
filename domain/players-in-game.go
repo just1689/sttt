@@ -19,12 +19,12 @@ type PlayersInGame struct {
 }
 
 func (p *PlayersInGame) AddPlayer(player *Player) (err error) {
-	p.Lock()
-	defer p.Unlock()
 	if p.IsGameFull() {
 		err = errors.New("game is full")
 		return
 	}
+	p.Lock()
+	defer p.Unlock()
 	_, found := p.Players[Player1]
 	if found {
 		p.Players[Player2] = player
@@ -68,5 +68,7 @@ func (p *PlayersInGame) GetPlayerByTurnID(id int) *Player {
 }
 
 func (p *PlayersInGame) IsGameFull() bool {
+	p.Lock()
+	defer p.Unlock()
 	return len(p.Players) == 2
 }

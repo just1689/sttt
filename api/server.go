@@ -3,9 +3,32 @@ package api
 import (
 	"errors"
 	"github.com/just1689/sttt/domain"
+	"time"
 )
 
 var Server = domain.NewServer()
+var maxTries = 10
+
+func HandleQuickGame(p domain.Player) (game *domain.Game, err error) {
+	tries := 0
+	for tries < maxTries {
+		for gID, g := range Server.Games {
+			if !g.PlayersInGame.IsGameFull() {
+				err = HandleJoinGame(gID, p)
+				if err != nil {
+					continue
+				}
+				game = g
+				return
+			}
+		}
+		time.Sleep(50 * time.Millisecond)
+		tries++
+	}
+	game, err = HandleCreateGame(p)
+	return
+
+}
 
 func HandleCreatePlayer(name string) *domain.Player {
 	return Server.GeneratePlayer(name)

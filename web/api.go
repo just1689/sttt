@@ -58,6 +58,30 @@ func handleCreateGame(writer http.ResponseWriter, request *http.Request) {
 
 }
 
+func handleQuickGame(writer http.ResponseWriter, request *http.Request) {
+	r := &domain.Auth{}
+	b, err := readBody(request)
+	if err != nil {
+		logrus.Errorln(err)
+		http.Error(writer, "bad request - body", http.StatusBadRequest)
+		return
+	}
+	err = json.Unmarshal(b, r)
+	if err != nil {
+		logrus.Errorln(err)
+		http.Error(writer, "bad request - json", http.StatusBadRequest)
+		return
+	}
+	game, err := api.HandleQuickGame(r.GetPlayer())
+	if err != nil {
+		logrus.Errorln(err)
+		http.Error(writer, fmt.Sprint("bad request - ", err.Error()), http.StatusBadRequest)
+		return
+	}
+	marshalReply(writer, game)
+
+}
+
 func handleJoinGame(writer http.ResponseWriter, request *http.Request) {
 	r := &joinGameRequest{}
 	b, err := readBody(request)

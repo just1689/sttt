@@ -9,5 +9,6 @@ func Setup(listen string) {
 	http.HandleFunc("/joinGame", handleJoinGame)
 	http.HandleFunc("/turn", handleTurn)
 	http.HandleFunc("/gameInfo", HandleGetGameInfo)
+	http.HandleFunc("/quickGame", handleQuickGame)
 	http.ListenAndServe(listen, nil)
 }
