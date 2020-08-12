@@ -16,6 +16,24 @@ type Server struct {
 	Games map[string]*Game
 }
 
+func (s *Server) GameByID(ID string) (*Game, bool) {
+	s.Lock()
+	defer s.Unlock()
+	g, f := s.Games[ID]
+	return g, f
+}
+
+func (s *Server) NextOpenGame() *Game {
+	s.Lock()
+	defer s.Unlock()
+	for _, g := range s.Games {
+		if !g.PlayersInGame.IsGameFull() {
+			return g
+		}
+	}
+	return nil
+}
+
 func (s *Server) GetGames() []GameInfo {
 	s.Lock()
 	defer s.Unlock()

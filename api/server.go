@@ -12,18 +12,19 @@ var maxTries = 10
 func HandleQuickGame(p domain.Player) (game *domain.Game, err error) {
 	tries := 0
 	for tries < maxTries {
-		for gID, g := range Server.Games {
-			if !g.PlayersInGame.IsGameFull() {
-				err = HandleJoinGame(gID, p)
-				if err != nil {
-					continue
-				}
-				game = g
-				return
-			}
-		}
-		time.Sleep(50 * time.Millisecond)
 		tries++
+		g := Server.NextOpenGame()
+		if g == nil {
+			continue
+		}
+		err = HandleJoinGame(g.ID, p)
+		if err != nil {
+			time.Sleep(50 * time.Millisecond)
+			continue
+		}
+		game = g
+		return
+
 	}
 	game, err = HandleCreateGame(p)
 	return
@@ -48,7 +49,7 @@ func HandleCreateGame(p domain.Player) (game *domain.Game, err error) {
 }
 
 func HandleJoinGame(gameID string, player domain.Player) (err error) {
-	game, found := Server.Games[gameID]
+	game, found := Server.GameByID(gameID)
 	if !found {
 		err = errors.New("could not find game")
 		return
@@ -59,7 +60,7 @@ func HandleJoinGame(gameID string, player domain.Player) (err error) {
 
 func HandleGameInfo(gameID string) (game *domain.Game, err error) {
 	var found bool
-	game, found = Server.Games[gameID]
+	game, found = Server.GameByID(gameID)
 	if !found {
 		err = errors.New("could not find game")
 		return
@@ -68,7 +69,7 @@ func HandleGameInfo(gameID string) (game *domain.Game, err error) {
 }
 
 func HandleTurn(gameID string, secret string, turnID int, x, y int) (err error) {
-	game, found := Server.Games[gameID]
+	game, found := Server.GameByID(gameID)
 	if !found {
 		err = errors.New("could not find gameID")
 		return
