@@ -7,7 +7,7 @@ import (
 )
 
 var Server = domain.NewServer()
-var maxTries = 10
+var maxTries = 20
 
 func HandleQuickGame(p domain.Player) (game *domain.Game, err error) {
 	tries := 0
@@ -19,16 +19,14 @@ func HandleQuickGame(p domain.Player) (game *domain.Game, err error) {
 		}
 		err = HandleJoinGame(g.ID, p)
 		if err != nil {
-			time.Sleep(50 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 		game = g
 		return
-
 	}
 	game, err = HandleCreateGame(p)
 	return
-
 }
 
 func HandleCreatePlayer(name string) *domain.Player {

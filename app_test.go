@@ -20,8 +20,9 @@ func Test_endToEnd4Players(t *testing.T) {
 }
 
 func Test_endToEndMultiThreaded(t *testing.T) {
+	games := 500
 	wg := sync.WaitGroup{}
-	for i := 0; i < 500; i++ {
+	for i := 0; i < games; i++ {
 		wg.Add(1)
 		go func() {
 			p1N := fmt.Sprint("x", i)
@@ -32,6 +33,10 @@ func Test_endToEndMultiThreaded(t *testing.T) {
 		}()
 	}
 	wg.Wait()
+	count := len(api.Server.Games)
+	if count > 500 {
+		t.Error("too many games ", count, " instead of ", games)
+	}
 
 }
 
