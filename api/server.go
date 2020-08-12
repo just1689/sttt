@@ -3,30 +3,55 @@ package api
 import (
 	"errors"
 	"github.com/just1689/sttt/domain"
-	"time"
+	"github.com/sirupsen/logrus"
 )
 
 var Server = domain.NewServer()
-var maxTries = 20
+var quickIn = make(chan Quick, 64)
 
-func HandleQuickGame(p domain.Player) (game *domain.Game, err error) {
-	tries := 0
-	for tries < maxTries {
-		tries++
-		g := Server.NextOpenGame()
-		if g == nil {
-			continue
-		}
-		err = HandleJoinGame(g.ID, p)
-		if err != nil {
-			time.Sleep(100 * time.Millisecond)
-			continue
-		}
-		game = g
-		return
+func HandleQuickGame(p domain.Player) *domain.Game {
+	reply := make(chan *domain.Game)
+	quickIn <- Quick{
+		p:     p,
+		reply: reply,
 	}
-	game, err = HandleCreateGame(p)
-	return
+	return <-reply
+}
+
+type Quick struct {
+	p     domain.Player
+	reply chan *domain.Game
+}
+
+func RunQuickGame() {
+	go func() {
+		for next := range quickIn {
+			done := false
+			for !done {
+				g := Server.NextOpenGame()
+				if g != nil {
+					err := HandleJoinGame(g.ID, next.p)
+					if err != nil {
+						done = false
+						continue
+					}
+					next.reply <- g
+					close(next.reply)
+					done = true
+					break
+				}
+				game, err := HandleCreateGame(next.p)
+				if err != nil {
+					logrus.Errorln("could not create game")
+					continue
+				}
+				next.reply <- game
+				close(next.reply)
+				done = true
+				break
+			}
+		}
+	}()
 }
 
 func HandleCreatePlayer(name string) *domain.Player {

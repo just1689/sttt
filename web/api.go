@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/just1689/sttt/api"
 	"github.com/just1689/sttt/domain"
@@ -72,9 +73,9 @@ func handleQuickGame(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, "bad request - json", http.StatusBadRequest)
 		return
 	}
-	game, err := api.HandleQuickGame(r.GetPlayer())
-	if err != nil {
-		logrus.Errorln(err)
+	game := api.HandleQuickGame(r.GetPlayer())
+	if game == nil {
+		logrus.Errorln(errors.New("internal error quick joining game"))
 		http.Error(writer, fmt.Sprint("bad request - ", err.Error()), http.StatusBadRequest)
 		return
 	}
