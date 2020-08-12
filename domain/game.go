@@ -3,9 +3,11 @@ package domain
 import (
 	"github.com/google/uuid"
 	"github.com/just1689/sttt/metrics"
+	"github.com/sirupsen/logrus"
 )
 
 func NewGame(p *Player) *Game {
+	logrus.Infoln("Creating new game...")
 	metrics.GamesCreated.Inc()
 	metrics.PlayersJoined.Inc()
 	return &Game{

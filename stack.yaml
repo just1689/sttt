@@ -12,7 +12,7 @@ spec:
       port: 8080
       targetPort: 8080
   selector:
-    app: sttt
+    name: sttt
   type: ClusterIP
   sessionAffinity: None
 ---
@@ -37,9 +37,22 @@ spec:
     spec:
       containers:
         - name: sttt
-          image: reg.captainjustin.space/just1689/sttt:dev
+          image: just1689/sttt:dev
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
 ---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: sttt
+  namespace: sttt
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /sttt
+            backend:
+              serviceName: sttt
+              servicePort: 8080

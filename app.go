@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/just1689/sttt/api"
 	"github.com/just1689/sttt/web"
 	"github.com/sirupsen/logrus"
 	"os"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	listen := getListen()
+	api.RunQuickGame()
 	logrus.Println("listening on", listen)
 	web.Setup(listen)
 }

@@ -76,7 +76,7 @@ func handleQuickGame(writer http.ResponseWriter, request *http.Request) {
 	game := api.HandleQuickGame(r.GetPlayer())
 	if game == nil {
 		logrus.Errorln(errors.New("internal error quick joining game"))
-		http.Error(writer, fmt.Sprint("bad request - ", err.Error()), http.StatusBadRequest)
+		http.Error(writer, fmt.Sprint("bad request - ", err), http.StatusBadRequest)
 		return
 	}
 	marshalReply(writer, game)
