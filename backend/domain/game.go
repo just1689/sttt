@@ -2,7 +2,7 @@ package domain
 
 import (
 	"github.com/google/uuid"
-	"github.com/just1689/sttt/metrics"
+	"github.com/just1689/sttt/backend/metrics"
 	"github.com/sirupsen/logrus"
 )
 

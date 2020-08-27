@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/just1689/sttt/metrics"
+	"github.com/just1689/sttt/backend/metrics"
 	"github.com/sirupsen/logrus"
 	"net/http"
 

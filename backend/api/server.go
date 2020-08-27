@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	"github.com/just1689/sttt/domain"
+	"github.com/just1689/sttt/backend/domain"
 	"github.com/sirupsen/logrus"
 )
 

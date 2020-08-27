@@ -1,9 +1,9 @@
-package main
+package backend
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/just1689/sttt/api"
+	"github.com/just1689/sttt/backend/api"
 	"sync"
 	"testing"
 	"time"

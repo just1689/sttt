@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/just1689/sttt/api"
-	"github.com/just1689/sttt/web"
+	"github.com/just1689/sttt/backend/api"
+	"github.com/just1689/sttt/backend/web"
 	"github.com/sirupsen/logrus"
 	"os"
 )

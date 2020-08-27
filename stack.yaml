@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sttt
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -14,7 +19,10 @@ spec:
   selector:
     name: sttt
   type: ClusterIP
-  sessionAffinity: None
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10000
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -37,7 +45,7 @@ spec:
     spec:
       containers:
         - name: sttt
-          image: just1689/sttt:dev
+          image: reg.captainjustin.space/just1689/sttt:dev7
           ports:
             - name: http
               containerPort: 8080

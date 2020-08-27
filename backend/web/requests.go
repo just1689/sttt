@@ -1,6 +1,6 @@
 package web
 
-import "github.com/just1689/sttt/domain"
+import "github.com/just1689/sttt/backend/domain"
 
 type createPlayerRequest struct {
 	Name string `json:"name"`

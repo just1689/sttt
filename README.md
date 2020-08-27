@@ -4,5 +4,4 @@
 
 - Build front-end
 - DaemonSet yaml
-- Prometheus stats endpoint + yaml annotations
 

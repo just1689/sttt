@@ -3,12 +3,12 @@ RUN mkdir /user && \
     echo 'nobody:x:65534:65534:nobody:/:' > /user/passwd && \
     echo 'nobody:x:65534:' > /user/group
 WORKDIR /src
-COPY go.mod ./
+COPY ../go.mod ./
 RUN go mod download
 
 
 FROM vendor as builder
-COPY . .
+COPY .. .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
 
 

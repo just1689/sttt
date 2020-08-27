@@ -3,7 +3,7 @@ package domain
 import (
 	"errors"
 	"fmt"
-	"github.com/just1689/sttt/metrics"
+	"github.com/just1689/sttt/backend/metrics"
 	"sync"
 )
 
